@@ -1,9 +1,9 @@
-#include <stdio.h>
+#include <stdio.h> /* printf */
 #include <string.h> /* strlen, strcmp */
-#include <stdlib.h> /* malloc */
+#include <stdlib.h> /* malloc, calloc, free */
 #include "hash_table.h"
 
-#define HASH_TABLE_SIZE 8
+#define HASH_TABLE_SIZE 65536
 #define LOAD_FACTOR_THRESHOLD 0.75
 
 static unsigned int djb2(const char *str)
@@ -86,7 +86,22 @@ void ht_free(hash_table *h)
 	free(h);
 }
 
-hash_table *ht_init()
+struct item_t *ht_search(const hash_table *h, const char *key)
+{
+	struct item_t *item;
+	unsigned int index = djb2(key) % h->ht_size;
+
+	item = h->ht[index];
+	while (item != NULL) {
+		if (strcmp(item->key, key) == 0)
+			return item;
+		item = item->next;
+	}
+
+	return NULL;
+}
+
+hash_table *ht_init(void)
 {
 	hash_table *h;
 
@@ -99,6 +114,7 @@ hash_table *ht_init()
 
 int main(void)
 {
+	struct item_t *item;
 	hash_table *ht = ht_init();
 
 	ht_insert(ht, "apple", 600);
@@ -106,7 +122,19 @@ int main(void)
 	ht_insert(ht, "fuck", 222);
 	ht_insert(ht, "lemon123", 300);
 	ht_insert(ht, "fuck", 555);
-	ht_insert(ht, "fucking", 555);
+	ht_insert(ht, "fucking", 666);
+	item = ht_search(ht, "apple");
+	if (item) {
+		printf("key: %s, value: %d\n", item->key, item->value);
+	}
+	item = ht_search(ht, "watermelon");
+	if (item) {
+		printf("key: %s, value: %d\n", item->key, item->value);
+	}
+	item = ht_search(ht, "fuck");
+	if (item) {
+		printf("key: %s, value: %d\n", item->key, item->value);
+	}
 	ht_free(ht);
 	return 0;
 }

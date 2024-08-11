@@ -13,8 +13,9 @@ typedef struct hash_table_t {
 	unsigned int ht_count;
 } hash_table;
 
+struct item_t *ht_search(const hash_table *h, const char *key);
 void ht_insert(hash_table *h, const char *key, int value);
 void ht_free(hash_table *h);
-hash_table *ht_init();
+hash_table *ht_init(void);
 
 #endif
