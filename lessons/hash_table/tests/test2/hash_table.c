@@ -105,6 +105,26 @@ struct item_t *ht_search(const hash_table *h, const char *key)
 	return NULL;
 }
 
+void ht_delete(hash_table *h, const char *key)
+{
+	struct item_t *item, *prev_item = NULL;
+	unsigned int index = djb2(key) % h->ht_size;
+
+	item = h->ht[index];
+	while (item != NULL) {
+		if (strcmp(item->key, key) == 0) {
+			if (prev_item != NULL)
+				prev_item = item->next;
+			else
+				h->ht[index] = item->next;
+			free(item);
+			return;
+		}
+		prev_item = item;
+		item = item->next;
+	}
+}
+
 hash_table *ht_init(void)
 {
 	hash_table *h;

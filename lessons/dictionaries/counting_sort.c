@@ -40,6 +40,10 @@ static void counting_sort(const int *n, int size)
 	j = min_value(n, size);
 	if (i != -1 && j != -1)
 		arr_size = n[i] - n[j] + 1;
+	else {
+		fprintf(stderr, "counting_sort: error: array size equal 0\n");
+		return;
+	}
 
 	int *nums = malloc(arr_size*4);
 	for (i = 0; i < arr_size; i++)
