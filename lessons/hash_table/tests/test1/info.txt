@@ -1,8 +1,0 @@
-collision in index: 24538
-collision in index: 64839
-collision in index: 38188
-collision in index: 56383
-collision in index: 54557
-collision in index: 52041
-number of element in hash_table: 1000
-indentical key in index: 38188
