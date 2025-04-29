@@ -35,17 +35,22 @@ run()
 CFLAGS="-Wall -std=c99"
 LDFLAGS=""
 
+SRCT=`ls tests/*.c`
 SRC=`ls *.c`
 HED=`ls *.h`
 
 STARTTIME=`date +%s`
+
+if [ ! -f "tests/thousand_keys.txt" ]; then
+	unzip tests/mock_data.zip thousand_keys.txt -d tests/
+fi
 
 case $1 in
 	'' | debug)
 		run cc -o $PROJECT -O0 -g $CFLAGS $LDFLAGS $SRC -lm
 		;;
 	clean)
-		run rm -f $PROJECT *.o
+		run rm -f $PROJECT *.o *.out
 		;;
 	release)
 		run cc -o $PROJECT -O3 -mavx2 $CFLAGS $LDFLAGS $SRC -lm
@@ -70,7 +75,10 @@ case $1 in
 			for file in $HED; do
 				run indent -kr -ts4 -l120 $file
 			done
-			rm -f *.c~ *.h~
+			for file in $SRCT; do
+				run indent -kr -ts4 -l120 $file
+			done
+			rm -f *.c~ *.h~ tests/*.c~
 		fi
 		;;
 	prof)

@@ -162,15 +162,16 @@ void ht_delete(hash_table * h, const char *key)
 	while (it != NULL) {
 		if (strcmp(it->key, key) == 0) {
 			if (prev_it != NULL)
-				prev_it = it->next;
+				prev_it->next = it->next;
 			else
 				h->ht[index] = it->next;
 			pool_put(h->p, it);
-			return;
+			break;
 		}
 		prev_it = it;
 		it = it->next;
 	}
+	h->count--;
 }
 
 hash_table *ht_init(void)
@@ -182,7 +183,7 @@ hash_table *ht_init(void)
 	h = malloc(sizeof(hash_table));
 	h->p = malloc(sizeof(pool));
 	h->ht = calloc(HASH_TABLE_SIZE, sizeof(item *));
-	h->size = HASH_TABLE_SIZE;
+	h->size = next_prime(HASH_TABLE_SIZE);
 	h->count = 0;
 	buf = malloc(buf_len);
 	pool_init(h->p, buf, buf_len, sizeof(item), DEFAULT_ALIGNMENT);

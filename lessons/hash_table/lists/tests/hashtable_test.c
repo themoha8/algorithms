@@ -5,7 +5,7 @@
 #include <assert.h>
 #include "../hashtable.h"
 
-enum { max_keys = 500000, max_line_length = 64 };
+enum { max_keys = 1024, max_line_length = 64 };
 
 static char arr_keys[max_keys][max_line_length];
 
@@ -53,7 +53,7 @@ int main(void)
 
 	ht = ht_init();
 
-	fd = fopen("tests/five_handred_thousand_keys.txt", "r");
+	fd = fopen("tests/thousand_keys.txt", "r");
 	if (!fd) {
 		perror("thousand_keys.txt");
 		return 2;
@@ -83,6 +83,10 @@ int main(void)
 		i++;
 	}
 
+	ht_delete(ht, "day");
+	ht_delete(ht, "colour");
+	ht_delete(ht, "screen");
+	ht_delete(ht, "hell");
 	search_collisions(ht);
 	fclose(fd);
 	ht_free(ht);
