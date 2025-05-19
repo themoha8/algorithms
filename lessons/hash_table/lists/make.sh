@@ -38,6 +38,7 @@ LDFLAGS=""
 SRCT=`ls tests/*.c`
 SRC=`ls *.c`
 HED=`ls *.h`
+SRCWMAIN=`echo $SRC | sed 's/main\.c//g'`
 
 STARTTIME=`date +%s`
 
@@ -100,12 +101,12 @@ case $1 in
 		fi
 			;;
 	test)
-			if [ "$#" -gt 1 ]; then
-				run cc -g -o $2.out $CFLAGS $LDFLAGS tests/${2}.c $SRC -lm
-			else
-				echo "Type a program name (<name_test> without .c) or clean for deleting *.out files"
-				exit 1
-			fi
+			for file in $SRCT; do
+				run cc -o $file.out $CFLAGS $LDFLAGS $file $SRCWMAIN -lm
+				./$file.out
+				rm -f $file.out
+				echo "-----------------------------------------"
+			done
 			;;
 esac
 
