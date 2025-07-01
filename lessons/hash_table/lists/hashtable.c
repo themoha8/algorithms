@@ -166,26 +166,25 @@ void ht_delete(hash_table * h, const char *key)
 			else
 				h->ht[index] = it->next;
 			pool_put(h->p, it);
+			h->count--;
 			break;
 		}
 		prev_it = it;
 		it = it->next;
 	}
-	h->count--;
 }
 
 hash_table *ht_init(void)
 {
 	unsigned char *buf;
-	int buf_len = HASH_TABLE_SIZE * sizeof(item);
 	hash_table *h;
 
 	h = malloc(sizeof(hash_table));
-	h->p = malloc(sizeof(pool));
-	h->ht = calloc(HASH_TABLE_SIZE, sizeof(item *));
 	h->size = next_prime(HASH_TABLE_SIZE);
+	h->p = malloc(sizeof(pool));
+	h->ht = calloc(h->size, sizeof(item *));
 	h->count = 0;
-	buf = malloc(buf_len);
-	pool_init(h->p, buf, buf_len, sizeof(item), DEFAULT_ALIGNMENT);
+	buf = malloc(h->size * sizeof(item));
+	pool_init(h->p, buf, h->size * sizeof(item), sizeof(item), DEFAULT_ALIGNMENT);
 	return h;
 }
