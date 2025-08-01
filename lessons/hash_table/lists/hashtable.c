@@ -41,6 +41,23 @@ static long next_prime(unsigned long n)
 	return n - 1;
 }
 
+/*
+#define HASH_FACTOR 0.6180339887
+
+static unsigned long djb2(const char *str, int h_size)
+{
+	unsigned hash = str[0];
+	int i;
+
+	assert(str);
+
+	for(i = 0; str[i+1] != '\0'; i++)
+		hash = (hash << 5) - hash + str[i+1];
+
+	double p = hash * HASH_FACTOR;
+	return h_size * (p - (unsigned long)p);
+}
+*/
 static unsigned long djb2(const char *str)
 {
 	unsigned char c;
